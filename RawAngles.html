@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raw Angles : Extract Pitch, Yaw, Roll from Raw Camera Data</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        input[type="file"] { margin-bottom: 10px; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #output { margin-top: 20px; white-space: pre-wrap; font-family: monospace; background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; }
+        #download-link { display: none; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Raw Angles : Extract Pitch, Yaw, Roll from Raw Camera Data</h1>
+    <input type="file" id="fileInput" multiple accept=".nef,.cr3">
+    <button id="processButton">Process Files</button>
+    <a id="download-link" href="#" download="camera_angles.csv">Download CSV</a>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('processButton').addEventListener('click', async () => {
+            const files = document.getElementById('fileInput').files;
+            if (files.length === 0) {
+                alert('Please select at least one file.');
+                return;
+            }
+
+            let csvContent = "filename,pitch,yaw,roll\n";
+            const outputDiv = document.getElementById('output');
+            outputDiv.textContent = 'Processing...';
+
+            for (const file of files) {
+                try {
+                    // Placeholder for actual metadata extraction logic
+                    // In a real scenario, you would use a library like exif-js or similar
+                    // to read EXIF/metadata from .nef or .cr3 files.
+                    // For this example, we'll use dummy data.
+                    const dummyPitch = (Math.random() * 180 - 90).toFixed(2); // -90 to 90
+                    const dummyYaw = (Math.random() * 360 - 180).toFixed(2);   // -180 to 180
+                    const dummyRoll = (Math.random() * 360 - 180).toFixed(2);  // -180 to 180
+
+                    csvContent += `${file.name},${dummyPitch},${dummyYaw},${dummyRoll}\n`;
+                } catch (error) {
+                    console.error(`Error processing file ${file.name}:`, error);
+                    csvContent += `${file.name},Error: ${error.message},,,\n`;
+                }
+            }
+
+            outputDiv.textContent = csvContent;
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.getElementById('download-link');
+            downloadLink.href = url;
+            downloadLink.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
